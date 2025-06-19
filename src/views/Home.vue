@@ -1,10 +1,16 @@
 <script setup>
-  import Minesweeper from '@/minesweeper.js'
+  import { storeToRefs } from 'pinia';
 
-  const test = new Minesweeper(1);
-  console.log(test);
+  import { useMinesweeperStore } from '@/stores/minesweeper';
+
+  const store = useMinesweeperStore();
+  const { createMinesweeper } = store;
+  const { minesweeper } = storeToRefs(store);
 </script>
 
 <template>
   <h1>Démineur</h1>
+  <button @click="createMinesweeper(1)">Nouvelle partie</button>
+
+  <p v-if="minesweeper">{{ minesweeper.level }}</p>
 </template>
