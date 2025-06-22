@@ -72,7 +72,7 @@ export default class Minesweeper {
         return this.#exist({ x, y }) && this.grid[y][x] === 'B';
     }
 
-    #exist({ x, y }, callback) {
+    #exist({ x, y }) {
         return this.grid[y][x];
     }
 
@@ -98,7 +98,7 @@ export default class Minesweeper {
             return null;
         }
 
-        return this.grid[y][x]
+        return this.grid[coords.y][coords.x]
     }
 
     getValue({ x, y }) {
@@ -119,7 +119,7 @@ export default class Minesweeper {
     incrementScore(point) {
         this.score += point
 
-        if (this.score === this.success) {
+        if (this.isWon()) {
             this.end = true
         }
     }
@@ -134,5 +134,9 @@ export default class Minesweeper {
 
     isFinished() {
         return this.end
+    }
+
+    isWon() {
+        return this.score === this.success;
     }
 }
