@@ -1,8 +1,8 @@
 <script setup>
-  import { ref, computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { useMinesweeperStore } from '@/stores/minesweeper';
 
-  const { x, y } = defineProps({
+  const { x, y, forceReveal } = defineProps({
     x: {
       type: Number,
       required: true
@@ -10,12 +10,19 @@
     y: {
       type: Number,
       required: true
-    }
+    },
+    forceReveal: {
+      type: Boolean,
+      default: false
+    },
   });
+
+  const emit = defineEmits(['spreadReveal']);
 
   const value = ref(null);
   const isFlagged = ref(false);
   const isBombRevealed = ref(false);
+  const isRevealed = ref(false);
   const {
     reveal: tryCell,
     isFlagMode,
@@ -25,7 +32,7 @@
   } = useMinesweeperStore();
 
   const reveal = () => {
-    if (value.value !== null || isFinished()) {
+    if (value.value !== null || isFinished()) {
       return
     }
 
@@ -44,6 +51,7 @@
 
     incrementScore()
     value.value = result
+    isRevealed.value = true
   };
 
   const cellValue = computed(() => {
@@ -55,16 +63,20 @@
       return '💣'
     }
 
-    if (value.value === 0) {
+    if (value.value === '0') {
+      emit('spreadReveal', { x, y });
+
       return ''
     }
 
     return value.value ?? ''
   });
+
+  watch(() => forceReveal, newValue => newValue && reveal())
 </script>
 
 <template>
-  <td class="cell" @click="reveal">{{ cellValue }}</td>
+  <td :class="['cell', { 'revealed': isRevealed || isBombRevealed }]" @click="reveal">{{ cellValue }}</td>
 </template>
 
 <style scoped>
@@ -81,7 +93,11 @@
     transition-duration: .5s;
     transition-timing-function: ease-out;
 
-    &:hover {
+    &.revealed {
+      background-color: var(--white);
+    }
+
+    &:hover:not(.revealed) {
         background-color: var(--grey);
     }
   }

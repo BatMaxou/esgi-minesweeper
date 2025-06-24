@@ -11,10 +11,3 @@
 
   <RouterView />
 </template>
-
-<style>
-  body {
-    --grey: #777;
-    --light-grey: #d1cfcf;
-  }
-</style>
