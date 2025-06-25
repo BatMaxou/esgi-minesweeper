@@ -1,19 +1,33 @@
 <script setup>
+  import { computed, ref, toRaw } from 'vue';
   import { storeToRefs } from 'pinia';
-  import { computed } from 'vue';
 
   import { useMinesweeperStore } from '@/stores/minesweeper';
   import Cell from './Cell.vue';
 
-  const { minesweeper } = storeToRefs(useMinesweeperStore());
+  const toReveal = ref([]);
+  const store = useMinesweeperStore();
+  const { minesweeper } = storeToRefs(store);
+  const { getNeighbors } = store;
+
   const dimension = computed(() => minesweeper.value ? minesweeper.value.dimension : 0);
+
+  const onSpreadReveal = ({ x, y }) => {
+    toReveal.value = getNeighbors({ x, y }).map(({ x, y }) => {
+      return `${x},${y}`;
+    });
+  };
+
+  const shouldReveal = ({ x, y }) => {
+    return toReveal.value.includes(`${x},${y}`);
+  };
 </script>
 
 <template>
   <table>
     <tbody>
       <tr v-for="x in dimension" :key="x - 1">
-        <Cell v-for="y in dimension" :key="y - 1" :x="x - 1" :y="y - 1"/>
+        <Cell @spreadReveal="onSpreadReveal" v-for="y in dimension" :key="y - 1" :x="x - 1" :y="y - 1" :forceReveal="shouldReveal({ x: x - 1, y: y - 1 })"/>
       </tr>
     </tbody>
   </table>

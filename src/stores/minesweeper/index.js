@@ -44,6 +44,14 @@ export const useMinesweeperStore = defineStore('minesweeper', () => {
     minesweeper.value.incrementScore(1)
   }
 
+  const getNeighbors = (coords, strict = false) => {
+    if (!isValid(minesweeper)) {
+      return []
+    }
+
+    return toRaw(minesweeper.value).getNeighbors(coords, strict)
+  }
+
   return {
     minesweeper,
     createMinesweeper,
@@ -52,6 +60,7 @@ export const useMinesweeperStore = defineStore('minesweeper', () => {
     isWon,
     isFinished,
     incrementScore,
+    getNeighbors,
   }
 })
 
