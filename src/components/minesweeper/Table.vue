@@ -5,7 +5,7 @@
   import { useMinesweeperStore } from '@/stores/minesweeper';
   import Cell from './Cell.vue';
 
-  const toReveal = ref([]);
+  const toReveal = ref({});
   const store = useMinesweeperStore();
   const { minesweeper } = storeToRefs(store);
   const { getNeighbors } = store;
@@ -13,13 +13,19 @@
   const dimension = computed(() => minesweeper.value ? minesweeper.value.dimension : 0);
 
   const onSpreadReveal = ({ x, y }) => {
-    toReveal.value = getNeighbors({ x, y }).map(({ x, y }) => {
+    const neighbors = getNeighbors({ x, y }).map(({ x, y }) => {
       return `${x},${y}`;
+    });
+
+    neighbors.forEach((neighbor) => {
+      if (!toReveal.value[neighbor]) {
+        toReveal.value[neighbor] = true;
+      }
     });
   };
 
   const shouldReveal = ({ x, y }) => {
-    return toReveal.value.includes(`${x},${y}`);
+    return toReveal.value[`${x},${y}`] || false;
   };
 </script>
 
