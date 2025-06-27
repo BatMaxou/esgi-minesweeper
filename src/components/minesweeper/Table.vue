@@ -1,5 +1,5 @@
 <script setup>
-  import { computed, ref, toRaw } from 'vue';
+  import { computed, ref, toRaw, watch } from 'vue';
   import { storeToRefs } from 'pinia';
 
   import { useMinesweeperStore } from '@/stores/minesweeper';
@@ -7,7 +7,7 @@
 
   const toReveal = ref({});
   const store = useMinesweeperStore();
-  const { minesweeper } = storeToRefs(store);
+  const { minesweeper, isReset } = storeToRefs(store);
   const { getNeighbors } = store;
 
   const dimension = computed(() => minesweeper.value ? minesweeper.value.dimension : 0);
@@ -27,6 +27,12 @@
   const shouldReveal = ({ x, y }) => {
     return toReveal.value[`${x},${y}`] || false;
   };
+
+  watch(isReset, (newValue) => {
+    if (newValue) {
+      toReveal.value = {};
+    }
+  });
 </script>
 
 <template>

@@ -1,12 +1,25 @@
-import { ref, toRaw } from "vue"
+import { ref, toRaw, watch } from "vue"
 import { defineStore } from "pinia"
 
 import Minesweeper from "./model"
 
 export const useMinesweeperStore = defineStore('minesweeper', () => {
   const minesweeper = ref(null)
+  const isReset = ref(false)
+  const isFinished = ref(false)
+  const isWon = ref(false)
+  const isFlagMode = ref(false)
+
+  const resetMinesweeper = () => {
+    isReset.value = true
+    minesweeper.value = null
+    isFinished.value = false
+    isWon.value = false
+    isFlagMode.value = false
+  }
 
   const createMinesweeper = (level) => {
+    isReset.value = false
     minesweeper.value = new Minesweeper(level)
   }
 
@@ -15,25 +28,20 @@ export const useMinesweeperStore = defineStore('minesweeper', () => {
       return
     }
 
-    return toRaw(minesweeper.value).try(coords)
+    const value = toRaw(minesweeper.value).try(coords)
+
+    isFinished.value = minesweeper.value.isFinished()
+
+    return value
   }
 
-  const isFlagMode = () => {
+  const handleFlagMode = () => {
     if (!isValid(minesweeper)) {
       return
     }
 
-    const result = minesweeper.value.isFlagMode()
-
-    return result && !minesweeper.value.isFinished
-  }
-
-  const isWon = () => {
-    return minesweeper.value?.isWon() || false
-  }
-
-  const isFinished = () => {
-    return minesweeper.value?.isFinished() || false
+    minesweeper.value.handleFlagMode()
+    isFlagMode.value = minesweeper.value.isFlagMode()
   }
 
   const incrementScore = () => {
@@ -42,6 +50,9 @@ export const useMinesweeperStore = defineStore('minesweeper', () => {
     }
 
     minesweeper.value.incrementScore(1)
+
+    isWon.value = minesweeper.value.isWon()
+    isFinished.value = minesweeper.value.isFinished()
   }
 
   const getNeighbors = (coords, strict = false) => {
@@ -54,13 +65,16 @@ export const useMinesweeperStore = defineStore('minesweeper', () => {
 
   return {
     minesweeper,
-    createMinesweeper,
-    reveal,
-    isFlagMode,
     isWon,
+    isFlagMode,
     isFinished,
+    isReset,
+    createMinesweeper,
+    resetMinesweeper,
+    reveal,
     incrementScore,
     getNeighbors,
+    handleFlagMode,
   }
 })
 
