@@ -1,5 +1,6 @@
 <script setup>
   import { ref, computed, watch } from 'vue';
+  import { storeToRefs } from 'pinia';
   import { useMinesweeperStore } from '@/stores/minesweeper';
 
   const { x, y, forceReveal } = defineProps({
@@ -23,27 +24,33 @@
   const isFlagged = ref(false);
   const isBombRevealed = ref(false);
   const isRevealed = ref(false);
-  const {
-    reveal: tryCell,
-    isFlagMode,
-    isFinished,
-    isWon,
-    incrementScore,
-  } = useMinesweeperStore();
+
+  const store = useMinesweeperStore();
+  const { reveal: tryCell, incrementScore } = store;
+  const { isFinished, isWon, isFlagMode, isReset } = storeToRefs(store);
 
   const reveal = () => {
-    if (value.value !== null || isFinished()) {
+    // Si la valeur est déjà définie
+    // ou si la partie est terminée
+    // ou si la case est déjà marquée comme drapeau
+    // -- et qu'on ne force pas la révélation
+    // -- et qu'on n'est pas en mode drapeau (click sur un drapeau pour l'enlever)
+    if (
+      value.value !== null
+      || isFinished.value
+      || (isFlagged.value && !forceReveal && !isFlagMode.value)
+    ) {
       return
     }
 
-    if (isFlagMode()) {
+    if (isFlagMode.value) {
       isFlagged.value = !isFlagged.value
 
       return
     }
 
     const result = tryCell({ x, y });
-    if (!result && isFinished() && !isWon()) {
+    if (!result && isFinished.value && !isWon.value) {
       isBombRevealed.value = true
 
       return
@@ -72,7 +79,19 @@
     return value.value ?? ''
   });
 
-  watch(() => forceReveal, newValue => newValue && reveal())
+  watch(() => forceReveal, newValue => {
+    if (newValue) {
+      isFlagged.value = false;
+      reveal()
+    }
+  })
+
+  watch(isReset, () => {
+    value.value = null;
+    isFlagged.value = false;
+    isBombRevealed.value = false;
+    isRevealed.value = false;
+  });
 </script>
 
 <template>

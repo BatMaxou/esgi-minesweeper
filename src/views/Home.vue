@@ -6,8 +6,8 @@
   import Table from '@/components/minesweeper/Table.vue';
 
   const store = useMinesweeperStore();
-  const { createMinesweeper } = store;
   const { minesweeper } = storeToRefs(store);
+  const { createMinesweeper, resetMinesweeper, handleFlagMode } = store;
 
   const max = computed(() => {
     return minesweeper.value
@@ -18,8 +18,10 @@
 
 <template>
   <h1>Démineur</h1>
-  <button @click="createMinesweeper(1)">Nouvelle partie</button>
+  <button v-if="!minesweeper" @click="createMinesweeper(1)">Nouvelle partie</button>
+  <button v-if="minesweeper" @click="resetMinesweeper()">Abandonner</button>
 
+  <button v-if="minesweeper" @click="handleFlagMode()">Flag</button>
   <p v-if="minesweeper">{{ minesweeper.score }} / {{ max }}</p>
 
   <Table />
