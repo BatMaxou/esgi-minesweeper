@@ -1,19 +1,21 @@
 <script setup>
-  import { computed } from 'vue';
-  import { storeToRefs } from 'pinia';
+import {computed} from 'vue';
+import {storeToRefs} from 'pinia';
 
-  import { useMinesweeperStore } from '@/stores/minesweeper';
-  import Table from '@/components/minesweeper/Table.vue';
+import {useMinesweeperStore} from '@/stores/minesweeper';
+import Table from '@/components/minesweeper/Table.vue';
+import Timer from "@/components/minesweeper/Timer.vue";
 
-  const store = useMinesweeperStore();
-  const { minesweeper } = storeToRefs(store);
-  const { createMinesweeper, resetMinesweeper, handleFlagMode } = store;
+const store = useMinesweeperStore();
+const {minesweeper, isFinished, dimension} = storeToRefs(store);
+const {createMinesweeper, resetMinesweeper, handleFlagMode} = store;
 
-  const max = computed(() => {
-    return minesweeper.value
-      ? minesweeper.value.dimension * minesweeper.value.dimension - minesweeper.value.nbBombByDifficulty[minesweeper.value.level]
-      : 0;
-  });
+const max = computed(() => {
+  return minesweeper.value
+    ? minesweeper.value.dimension * minesweeper.value.dimension - minesweeper.value.nbBombByDifficulty[minesweeper.value.level]
+    : 0;
+});
+
 </script>
 
 <template>
@@ -24,5 +26,10 @@
   <button v-if="minesweeper" @click="handleFlagMode()">Flag</button>
   <p v-if="minesweeper">{{ minesweeper.score }} / {{ max }}</p>
 
-  <Table />
+  <Timer
+    :gameStarted="dimension > 0"
+    :gameFinished="isFinished"
+    :duration="3"
+  />
+  <Table/>
 </template>
