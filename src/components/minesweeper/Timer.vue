@@ -134,16 +134,22 @@ watch(isTimeUp, (timeUp) => {
 
 .timer-display.timer-normal {
   background-color: #f9f9f9;
+  color: black;
+  font-weight: normal;
 }
 
 .timer-display.timer-warning {
   background-color: #fff3cd;
   border-color: #ffc107;
+  color: orange;
+  font-weight: bold;
 }
 
 .timer-display.timer-danger {
   background-color: #f8d7da;
   border-color: #dc3545;
+  color: red;
+  font-weight: bold;
 }
 
 .bell {
