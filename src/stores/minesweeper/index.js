@@ -1,5 +1,5 @@
-import { ref, toRaw, watch } from "vue"
-import { defineStore } from "pinia"
+import {computed, ref, toRaw} from "vue"
+import {defineStore} from "pinia"
 
 import Minesweeper from "./model"
 
@@ -9,6 +9,8 @@ export const useMinesweeperStore = defineStore('minesweeper', () => {
   const isFinished = ref(false)
   const isWon = ref(false)
   const isFlagMode = ref(false)
+
+  const dimension = computed(() => minesweeper.value ? minesweeper.value.dimension : 0)
 
   const resetMinesweeper = () => {
     isReset.value = true
@@ -55,6 +57,15 @@ export const useMinesweeperStore = defineStore('minesweeper', () => {
     isFinished.value = minesweeper.value.isFinished()
   }
 
+  const endGameByTimer = () => {
+    if (!isValid(minesweeper)) {
+      return
+    }
+
+    isFinished.value = true
+    isWon.value = false
+  }
+
   const getNeighbors = (coords, strict = false) => {
     if (!isValid(minesweeper)) {
       return []
@@ -69,12 +80,14 @@ export const useMinesweeperStore = defineStore('minesweeper', () => {
     isFlagMode,
     isFinished,
     isReset,
+    dimension,
     createMinesweeper,
     resetMinesweeper,
     reveal,
     incrementScore,
     getNeighbors,
     handleFlagMode,
+    endGameByTimer,
   }
 })
 
