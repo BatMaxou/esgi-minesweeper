@@ -1,5 +1,9 @@
 body {
-  --white: #fff;
-  --grey: #777;
-  --light-grey: #d1cfcf;
+    --white: #fff;
+    --grey: #777;
+    --light-grey: #d1cfcf;
+    margin: 0;
+
+    /* Ugly as fuck */
+    overflow: hidden;
 }
