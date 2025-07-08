@@ -36,17 +36,19 @@ const handleDifficultyChange = (level) => {
   <h1>Démineur</h1>
 
   <div>
-    <button
-      v-for="(label, level) in difficultyLabels"
-      :key="level"
-      :class="{ active: difficulty == level }"
-      @click="handleDifficultyChange(parseInt(level))"
-    >
-      {{ label }}
-    </button>
+    <div class="difficulty-container">
+      <Button
+        v-for="(label, level) in difficultyLabels"
+        :key="level"
+        :active="difficulty == level"
+        @click="handleDifficultyChange(parseInt(level))"
+      >
+        {{ label }}
+      </Button>
+    </div>
   </div>
 
-  <Button v-if="!minesweeper" @click="createMinesweeper(1)">
+  <Button v-if="!minesweeper" @click="createMinesweeper(difficulty)">
     <svg class="icon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
       <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
       <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -124,5 +126,11 @@ const handleDifficultyChange = (level) => {
   box-shadow: inset -1px -1px 0 #ff8a80,
   inset 1px 1px 0 #b71c1c,
   1px 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.difficulty-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 </style>
