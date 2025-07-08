@@ -125,59 +125,63 @@ watch(isTimeUp, (timeUp) => {
   margin: 10px 0;
   position: relative;
   overflow: hidden;
+  background: linear-gradient(180deg, #f0f0f0 0%, #d0d0d0 50%, #b0b0b0 100%);
+  border: 2px outset #c0c0c0;
+  border-radius: 0;
+  padding: 12px 16px;
+  box-shadow: inset 1px 1px 0 #ffffff,
+  inset -1px -1px 0 #808080,
+  2px 2px 3px rgba(0, 0, 0, 0.2);
+  width: fit-content;
 }
 
 .timer-label {
   font-weight: bold;
-  color: #333;
+  color: #2c3e50;
+  text-shadow: 1px 1px 0 #ffffff;
+  font-size: 14px;
+  letter-spacing: 1px;
 }
 
 .timer-display {
-  font-size: 1em;
-  padding: 4px 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
-  min-width: 60px;
+  font-size: 16px;
+  padding: 8px 12px;
+  border: 2px inset #c0c0c0;
+  border-radius: 0;
+  background: linear-gradient(180deg, #2c2c2c 0%, #1a1a1a 100%);
+  min-width: 80px;
   text-align: center;
   transition: all 0.3s ease;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: bold;
+  letter-spacing: 1px;
+  box-shadow: inset -1px -1px 0 #ffffff,
+  inset 1px 1px 0 #808080,
+  0 1px 2px rgba(0, 0, 0, 0.1) inset;
 }
 
 .timer-display.timer-normal {
-  background-color: #f9f9f9;
-  color: black;
-  font-weight: normal;
+  background: linear-gradient(180deg, #2c2c2c 0%, #1a1a1a 100%);
+  color: #00ff00;
+  text-shadow: 0 0 5px #00ff00;
 }
 
 .timer-display.timer-warning {
-  background-color: #fff3cd;
-  border-color: #ffc107;
-  color: orange;
-  font-weight: bold;
+  background: linear-gradient(180deg, #4a3c00 0%, #2d2400 100%);
+  color: #ffff00;
+  text-shadow: 0 0 5px #ffff00;
+  border-color: #8B7355;
 }
 
 .timer-display.timer-danger {
-  background-color: #f8d7da;
-  border-color: #dc3545;
-  color: red;
-  font-weight: bold;
-}
-
-.bell {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: realistic-bell-ring 1.5s ease-in-out forwards;
-  transform-origin: center top;
-}
-
-.bell svg {
-  width: 18px;
-  height: 18px;
+  background: linear-gradient(180deg, #4a0000 0%, #2d0000 100%);
+  color: #ff0000;
+  text-shadow: 0 0 5px #ff0000;
+  border-color: #8B4513;
+  animation: danger-pulse 1s infinite;
 }
 
 @keyframes realistic-bell-ring {
@@ -212,37 +216,60 @@ watch(isTimeUp, (timeUp) => {
     transform: rotate(-8deg);
   }
   50% {
-    transform: rotate(8deg);
+    box-shadow: inset -1px -1px 0 #ffffff,
+    inset 1px 1px 0 #808080,
+    0 1px 2px rgba(0, 0, 0, 0.1) inset,
+    0 0 10px rgba(255, 0, 0, 0.5);
   }
-  55% {
-    transform: rotate(-5deg);
+}
+
+@keyframes danger-pulse {
+  0%, 100% {
+    box-shadow: inset -1px -1px 0 #ffffff,
+    inset 1px 1px 0 #808080,
+    0 1px 2px rgba(0, 0, 0, 0.1) inset;
   }
-  60% {
-    transform: rotate(5deg);
+  50% {
+    box-shadow: inset -1px -1px 0 #ffffff,
+    inset 1px 1px 0 #808080,
+    0 1px 2px rgba(0, 0, 0, 0.1) inset,
+    0 0 10px rgba(255, 0, 0, 0.5);
   }
-  65% {
-    transform: rotate(-3deg);
+}
+
+@media (max-width: 768px) {
+  .timer-container {
+    padding: 10px 12px;
+    gap: 8px;
   }
-  70% {
-    transform: rotate(3deg);
+
+  .timer-label {
+    font-size: 12px;
   }
-  75% {
-    transform: rotate(-1deg);
+
+  .timer-display {
+    font-size: 14px;
+    padding: 6px 8px;
+    min-width: 60px;
   }
-  80% {
-    transform: rotate(1deg);
+}
+
+@media (max-width: 480px) {
+  .timer-container {
+    padding: 8px 10px;
+    gap: 6px;
   }
-  85% {
-    transform: rotate(-0.5deg);
+
+  .timer-label {
+    font-size: 11px;
   }
-  90% {
-    transform: rotate(0.5deg);
+
+  .timer-display {
+    font-size: 12px;
+    padding: 4px 6px;
+    min-width: 50px;
   }
-  95% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(0deg);
-  }
+
+
 }
 </style>
