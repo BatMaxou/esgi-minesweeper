@@ -25,10 +25,6 @@ const getPokemon = async () => {
   }
 };
 
-const regeneratePokemon = () => {
-  getPokemon();
-};
-
 onMounted(() => {
   getPokemon();
 });
@@ -84,7 +80,7 @@ onMounted(() => {
 
     <Button
       class="regenerate-button"
-      @click="regeneratePokemon"
+      @click="getPokemon"
       :disabled="isLoading"
     >
       <span class="button-icon">🎲</span>
