@@ -19,6 +19,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  active: {
+    type: Boolean,
+    default: false
+  }
 })
 </script>
 
@@ -28,7 +32,10 @@ const props = defineProps({
     :to="props.as === 'router-link' ? props.to : undefined"
     :type="props.as === 'button' ? props.type : undefined"
     :disabled="props.as === 'button' ? props.disabled : undefined"
-    class="nav-button"
+    :class="[
+      'nav-button',
+      { 'is-active': props.active }
+    ]"
   >
     <span class="button-content">
       <slot/>
@@ -64,7 +71,8 @@ const props = defineProps({
   3px 3px 5px rgba(0, 0, 0, 0.3);
 }
 
-.nav-button:active {
+.nav-button:active,
+.nav-button.is-active {
   background: linear-gradient(180deg, #a0a0a0 0%, #c0c0c0 50%, #d0d0d0 100%);
   border: 2px inset #c0c0c0;
   transform: translateY(1px);
@@ -73,14 +81,16 @@ const props = defineProps({
   1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.nav-button.router-link-active {
+.nav-button.router-link-active,
+.nav-button.is-active {
   background: linear-gradient(180deg, #90c695 0%, #70a075 50%, #508055 100%);
   border-color: #60a065;
   color: #ffffff;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-.nav-button.router-link-active:hover {
+.nav-button.router-link-active:hover,
+.nav-button.is-active:hover {
   background: linear-gradient(180deg, #a0d6a5 0%, #80b085 50%, #609065 100%);
 }
 

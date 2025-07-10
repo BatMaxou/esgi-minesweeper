@@ -1,29 +1,55 @@
 <script setup>
-import {computed} from 'vue';
-import {storeToRefs} from 'pinia';
+import { computed } from "vue";
+import { storeToRefs } from "pinia";
 
-import {useMinesweeperStore} from '@/stores/minesweeper';
-import Table from '@/components/minesweeper/Table.vue';
+import { useMinesweeperStore } from "@/stores/minesweeper";
+import Table from "@/components/minesweeper/Table.vue";
 import Timer from "@/components/minesweeper/Timer.vue";
 import Button from '@/components/Button.vue';
 import Pokemon from '@/components/Pokemon.vue';
 
 const store = useMinesweeperStore();
-const {minesweeper, isFinished, dimension, isFlagMode} = storeToRefs(store);
-const {createMinesweeper, resetMinesweeper, handleFlagMode} = store;
+const { minesweeper, isFinished, dimension, difficulty, duration, isFlagMode } = storeToRefs(store);
+const { createMinesweeper, resetMinesweeper, handleFlagMode, setDifficulty, setDuration } = store;
 
 const max = computed(() => {
   return minesweeper.value
-    ? minesweeper.value.dimension * minesweeper.value.dimension - minesweeper.value.nbBombByDifficulty[minesweeper.value.level]
+    ? minesweeper.value.dimension * minesweeper.value.dimension -
+        minesweeper.value.nbBombByDifficulty[minesweeper.value.level]
     : 0;
 });
+
+const difficultyLabels = {
+  1: "Facile",
+  2: "Moyen",
+  3: "Difficile",
+};
+
+const handleDifficultyChange = (level) => {
+  setDifficulty(level);
+  if (minesweeper.value) {
+    createMinesweeper(level);
+  }
+};
 </script>
 
 <template>
   <div class="container">
     <div class="minesweeper-section">
       <h1>Démineur</h1>
-      <Button v-if="!minesweeper" @click="createMinesweeper(1)">
+      <div v-if="!minesweeper">
+        <div class="difficulty-container">
+          <Button
+            v-for="(label, level) in difficultyLabels"
+            :key="level"
+            :active="difficulty == level"
+            @click="handleDifficultyChange(parseInt(level))"
+          >
+            {{ label }}
+          </Button>
+        </div>
+      </div>
+      <Button v-if="!minesweeper" @click="createMinesweeper(difficulty)">
         <svg class="icon" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
           <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -68,7 +94,7 @@ const max = computed(() => {
       <Timer
         :gameStarted="dimension > 0"
         :gameFinished="isFinished"
-        :duration="3"
+        :duration="duration"
       />
       <Table/>
     </div>
@@ -97,7 +123,6 @@ const max = computed(() => {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
-  min-height: 100vh;
   box-sizing: border-box;
 }
 
@@ -292,5 +317,11 @@ const max = computed(() => {
   box-shadow: inset -1px -1px 0 #ff8a80,
   inset 1px 1px 0 #b71c1c,
   1px 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.difficulty-container {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 </style>

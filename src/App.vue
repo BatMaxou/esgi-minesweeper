@@ -17,8 +17,6 @@ import Navbar from "@/components/Navbar.vue";
 
 <style scoped>
 #app {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%);
   font-family: 'Courier New', monospace;
 }
 
@@ -34,7 +32,6 @@ import Navbar from "@/components/Navbar.vue";
 }
 
 .main-content {
-  min-height: calc(100vh - 80px);
   padding: 20px;
 }
 </style>

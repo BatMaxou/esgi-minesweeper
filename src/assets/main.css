@@ -3,10 +3,8 @@ body {
     --grey: #777;
     --light-grey: #d1cfcf;
     margin: 0;
-
-    /* Ugly as fuck */
-    overflow: hidden;
-}
+    min-height: 100vh;
+    background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%)  }
 
 @media (max-width: 768px) {
     body {

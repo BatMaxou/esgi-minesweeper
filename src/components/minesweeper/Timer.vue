@@ -1,72 +1,80 @@
 <script setup>
-import {computed, ref, watch} from 'vue'
-import {useTimer} from '@/composables/useTimer'
-import {vTimerColor} from '@/directives/timerColor'
-import {useMinesweeperStore} from '@/stores/minesweeper'
+import { computed, ref, watch } from "vue";
+import { useTimer } from "@/composables/useTimer";
+import { vTimerColor } from "@/directives/timerColor";
+import { useMinesweeperStore } from "@/stores/minesweeper";
 
 const props = defineProps({
   gameStarted: {
     type: Boolean,
-    default: false
+    default: false,
   },
   gameFinished: {
     type: Boolean,
-    default: false
+    default: false,
   },
   duration: {
     type: Number,
-    default: 300
-  }
-})
+    default: 300,
+  },
+});
 
-const store = useMinesweeperStore()
-const {endGameByTimer} = store
+const store = useMinesweeperStore();
+const { endGameByTimer } = store;
 
-const {remainingTime, formattedTime, isRunning, isTimeUp, start, stop, reset, setDuration} = useTimer(props.duration)
+const { remainingTime, formattedTime, isRunning, isTimeUp, start, stop, reset, setDuration } = useTimer(props.duration);
 
-const showFailedMessage = ref(false)
+const showFailedMessage = ref(false);
 
 const displayTime = computed(() => {
   if (showFailedMessage.value) {
-    return "Failed"
+    return "Failed";
   }
-  return formattedTime.value
-})
+  return formattedTime.value;
+});
 
-watch(() => props.duration, (newDuration) => {
-  setDuration(newDuration)
-})
-
-watch(() => props.gameStarted, (newValue, oldValue) => {
-  if (newValue && !oldValue) {
-    reset()
-    start()
-    showFailedMessage.value = false
+watch(
+  () => props.duration,
+  (newDuration) => {
+    setDuration(newDuration);
+    reset();
+    start();
   }
-})
+);
 
-watch(() => props.gameFinished, (newValue) => {
-  if (newValue && isRunning.value) {
-    stop()
+watch(
+  () => props.gameStarted,
+  (newValue, oldValue) => {
+    if (newValue && !oldValue) {
+      reset();
+      start();
+      showFailedMessage.value = false;
+    }
   }
-})
+);
+
+watch(
+  () => props.gameFinished,
+  (newValue) => {
+    if (newValue && isRunning.value) {
+      stop();
+    }
+  }
+);
 
 watch(isTimeUp, (timeUp) => {
   if (timeUp && isRunning.value) {
-    stop()
-    showFailedMessage.value = true
-    endGameByTimer()
+    stop();
+    showFailedMessage.value = true;
+    endGameByTimer();
   }
-})
+});
 </script>
 
 <template>
   <div v-if="props.gameStarted" class="timer-container">
     <div class="timer-label">Temps:</div>
-    <div
-      class="timer-display"
-      v-timer-color="{ remainingTime, totalDuration: props.duration }"
-    >
+    <div class="timer-display" v-timer-color="{ remainingTime, totalDuration: props.duration }">
       {{ displayTime }}
     </div>
   </div>
@@ -76,9 +84,9 @@ watch(isTimeUp, (timeUp) => {
 .timer-container {
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-family: 'Courier New', monospace;
-  margin: 15px 0;
+  gap: 8px;
+  font-family: "Courier New", monospace;
+  margin: 10px 0;
   position: relative;
   overflow: hidden;
   background: linear-gradient(180deg, #f0f0f0 0%, #d0d0d0 50%, #b0b0b0 100%);
