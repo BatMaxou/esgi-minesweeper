@@ -1,15 +1,8 @@
-<script setup lang="ts">
+<script setup>
 import {onMounted, ref} from 'vue';
 import Button from "@/components/Button.vue";
 
-interface Pokemon {
-  name: string;
-  sprites: {
-    front_default: string;
-  };
-}
-
-const pokemon = ref<Pokemon | null>(null);
+const pokemon = ref(null);
 const isLoading = ref(false);
 
 const getPokemon = async () => {
@@ -172,7 +165,6 @@ onMounted(() => {
   color: #2c3e50;
   font-weight: bold;
   font-size: 12px;
-  font-family: 'Courier New', monospace;
   transition: all 0.1s ease;
   cursor: pointer;
   display: flex;

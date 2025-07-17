@@ -12,11 +12,18 @@ export const useMinesweeperStore = defineStore("minesweeper", () => {
   const difficulty = ref(parseInt(localStorage.getItem("minesweeper-difficulty")) || 1);
   const dimension = computed(() => (minesweeper.value ? minesweeper.value.dimension : 0));
   const durationByDifficulty = {
-    1: 300,
+    1: 600,
     2: 180,
     3: 120,
   };
+  const difficultyLabels = {
+    1: "Facile",
+    2: "Moyen",
+    3: "Difficile",
+  };
+
   const duration = computed(() => durationByDifficulty[difficulty.value]);
+  const timeSpent = ref(0);
 
   const resetMinesweeper = () => {
     isReset.value = true;
@@ -57,7 +64,7 @@ export const useMinesweeperStore = defineStore("minesweeper", () => {
     isFlagMode.value = minesweeper.value.isFlagMode();
   };
 
-  const incrementScore = () => {
+  const incrementScore = (time) => {
     if (!isValid(minesweeper)) {
       return;
     }
@@ -66,6 +73,10 @@ export const useMinesweeperStore = defineStore("minesweeper", () => {
 
     isWon.value = minesweeper.value.isWon();
     isFinished.value = minesweeper.value.isFinished();
+
+    if (isFinished.value) {
+      timeSpent.value = time; 
+    }
   };
 
   const endGameByTimer = () => {
@@ -85,6 +96,18 @@ export const useMinesweeperStore = defineStore("minesweeper", () => {
     return toRaw(minesweeper.value).getNeighbors(coords, strict);
   };
 
+  const setTimeSpent = (time) => {
+    timeSpent.value = time;
+  }
+
+  const getDifficultyLabel = () => {
+    return difficultyLabels[difficulty.value];
+  };
+
+  const getDifficultyLabels = () => {
+    return difficultyLabels;
+  };
+
   return {
     minesweeper,
     isWon,
@@ -94,6 +117,7 @@ export const useMinesweeperStore = defineStore("minesweeper", () => {
     dimension,
     difficulty,
     duration,
+    timeSpent,
     createMinesweeper,
     resetMinesweeper,
     reveal,
@@ -102,6 +126,9 @@ export const useMinesweeperStore = defineStore("minesweeper", () => {
     handleFlagMode,
     endGameByTimer,
     setDifficulty,
+    setTimeSpent,
+    getDifficultyLabel,
+    getDifficultyLabels,
   };
 });
 

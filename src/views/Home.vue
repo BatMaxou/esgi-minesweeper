@@ -5,12 +5,14 @@ import { storeToRefs } from "pinia";
 import { useMinesweeperStore } from "@/stores/minesweeper";
 import Table from "@/components/minesweeper/Table.vue";
 import Timer from "@/components/minesweeper/Timer.vue";
+import WinForm from '@/components/minesweeper/WinForm.vue'
+import FailedMessage from '@/components/minesweeper/FailedMessage.vue';
 import Button from '@/components/Button.vue';
 import Pokemon from '@/components/Pokemon.vue';
 
 const store = useMinesweeperStore();
-const { minesweeper, isFinished, dimension, difficulty, duration, isFlagMode } = storeToRefs(store);
-const { createMinesweeper, resetMinesweeper, handleFlagMode, setDifficulty, setDuration } = store;
+const { minesweeper, isFinished, dimension, difficulty, duration, isFlagMode, timeSpent, isWon } = storeToRefs(store);
+const { createMinesweeper, resetMinesweeper, handleFlagMode, setDifficulty, setDuration, getDifficultyLabels  } = store;
 
 const max = computed(() => {
   return minesweeper.value
@@ -18,12 +20,6 @@ const max = computed(() => {
         minesweeper.value.nbBombByDifficulty[minesweeper.value.level]
     : 0;
 });
-
-const difficultyLabels = {
-  1: "Facile",
-  2: "Moyen",
-  3: "Difficile",
-};
 
 const handleDifficultyChange = (level) => {
   setDifficulty(level);
@@ -40,7 +36,7 @@ const handleDifficultyChange = (level) => {
       <div v-if="!minesweeper">
         <div class="difficulty-container">
           <Button
-            v-for="(label, level) in difficultyLabels"
+            v-for="(label, level) in getDifficultyLabels()"
             :key="level"
             :active="difficulty == level"
             @click="handleDifficultyChange(parseInt(level))"
@@ -97,6 +93,8 @@ const handleDifficultyChange = (level) => {
         :duration="duration"
       />
       <Table/>
+      <WinForm v-if="isFinished && isWon" />
+      <FailedMessage v-if="isFinished && !isWon" />
     </div>
 
     <div class="pokemon-section">
@@ -166,7 +164,6 @@ const handleDifficultyChange = (level) => {
   box-shadow: inset 1px 1px 0 #ffffff,
   inset -1px -1px 0 #808080,
   2px 2px 3px rgba(0, 0, 0, 0.2);
-  font-family: 'Courier New', monospace;
   overflow: hidden;
   min-width: 250px;
   max-width: 300px;

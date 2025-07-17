@@ -67,6 +67,7 @@ export function useTimer(durationInSeconds = 300) {
     formattedTime,
     isRunning,
     isTimeUp,
+    elapsedTime,
     start,
     stop,
     reset,
