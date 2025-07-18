@@ -12,9 +12,9 @@ export const useMinesweeperStore = defineStore("minesweeper", () => {
   const difficulty = ref(parseInt(localStorage.getItem("minesweeper-difficulty")) || 1);
   const dimension = computed(() => (minesweeper.value ? minesweeper.value.dimension : 0));
   const durationByDifficulty = {
-    1: 600,
-    2: 180,
-    3: 120,
+    1: 240,
+    2: 420,
+    3: 600,
   };
   const difficultyLabels = {
     1: "Facile",
