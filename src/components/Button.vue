@@ -53,7 +53,6 @@ const props = defineProps({
   color: #2c3e50;
   font-weight: bold;
   font-size: 14px;
-  font-family: 'Courier New', monospace;
   transition: all 0.1s ease;
   position: relative;
   box-shadow: inset 1px 1px 0 #ffffff,

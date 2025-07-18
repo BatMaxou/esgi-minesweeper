@@ -1,5 +1,6 @@
 <script setup>
 import { computed, ref, watch } from "vue";
+import { storeToRefs } from 'pinia';
 import { useTimer } from "@/composables/useTimer";
 import { vTimerColor } from "@/directives/timerColor";
 import { useMinesweeperStore } from "@/stores/minesweeper";
@@ -20,9 +21,10 @@ const props = defineProps({
 });
 
 const store = useMinesweeperStore();
-const { endGameByTimer } = store;
+const { isFinished } = storeToRefs(store)
+const { endGameByTimer, setTimeSpent } = store;
 
-const { remainingTime, formattedTime, isRunning, isTimeUp, start, stop, reset, setDuration } = useTimer(props.duration);
+const { remainingTime, formattedTime, isRunning, isTimeUp, elapsedTime, start, stop, reset, setDuration } = useTimer(props.duration);
 
 const showFailedMessage = ref(false);
 
@@ -69,6 +71,12 @@ watch(isTimeUp, (timeUp) => {
     endGameByTimer();
   }
 });
+
+watch(isFinished, (isFinished) => {
+  if (isFinished) {
+    setTimeSpent(elapsedTime.value)
+  }
+})
 </script>
 
 <template>
@@ -85,7 +93,6 @@ watch(isTimeUp, (timeUp) => {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: "Courier New", monospace;
   margin: 10px 0;
   position: relative;
   overflow: hidden;
