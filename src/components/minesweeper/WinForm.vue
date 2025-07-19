@@ -1,13 +1,13 @@
 <script setup>
-import { ref } from 'vue';
-import { storeToRefs } from 'pinia';
+import {ref} from 'vue';
+import {storeToRefs} from 'pinia';
 
-import { useMinesweeperStore } from '@/stores/minesweeper';
+import {useMinesweeperStore} from '@/stores/minesweeper';
 import Button from '@/components/Button.vue';
 
 const store = useMinesweeperStore();
-const { difficulty, timeSpent, duration } = storeToRefs(store);
-const { getDifficultyLabel, resetMinesweeper } = store;
+const {timeSpent, duration} = storeToRefs(store);
+const {getDifficultyLabel, resetMinesweeper} = store;
 
 const pseudo = ref('')
 
@@ -43,7 +43,7 @@ const onSubmit = () => {
     <li>Difficulté : {{ getDifficultyLabel() }}</li>
   </ul>
   <form @submit.prevent="onSubmit" class="win-form">
-    <input v-model.trim.lazy="pseudo" class="pseudo-input" placeholder="Entrez votre pseudo" />
+    <input v-model.trim.lazy="pseudo" class="pseudo-input" placeholder="Entrez votre pseudo"/>
     <Button type="submit">Enregistrer</Button>
   </form>
 </template>
@@ -63,7 +63,7 @@ const onSubmit = () => {
   font-size: 14px;
   background: linear-gradient(180deg, #ffffff 0%, #f8f8f8 100%);
   box-shadow: inset 1px 1px 0 #808080,
-             inset -1px -1px 0 #ffffff;
+  inset -1px -1px 0 #ffffff;
   box-sizing: border-box;
 }
 
@@ -94,7 +94,7 @@ const onSubmit = () => {
   font-size: 14px;
   color: #333;
   box-shadow: inset 1px 1px 0 #ffffff,
-              inset -1px -1px 0 #808080;
+  inset -1px -1px 0 #808080;
 }
 
 .win-details li {

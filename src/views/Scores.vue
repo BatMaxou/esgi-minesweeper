@@ -1,15 +1,19 @@
-
 <script setup>
-import { ref } from 'vue';
+import {onMounted, ref} from 'vue';
 import ScoresTab from '@/components/minesweeper/ScoresTab.vue';
 
 import Button from '@/components/Button.vue';
-import { useMinesweeperStore } from '@/stores/minesweeper';
+import {useMinesweeperStore} from '@/stores/minesweeper';
 
 const store = useMinesweeperStore();
-const { getDifficultyLabels } = store;
+const {getDifficultyLabels} = store;
 
 const difficulty = ref(getDifficultyLabels()[1]);
+
+// reset the minesweeper when the component is mounted
+onMounted(() => {
+  store.resetMinesweeper();
+})
 </script>
 
 <template>
@@ -27,7 +31,7 @@ const difficulty = ref(getDifficultyLabels()[1]);
       </Button>
     </div>
 
-    <ScoresTab :difficulty="difficulty" />
+    <ScoresTab :difficulty="difficulty"/>
   </div>
 </template>
 
